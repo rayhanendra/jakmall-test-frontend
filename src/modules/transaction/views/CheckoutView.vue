@@ -6,7 +6,7 @@
         <Form :validation-schema="validationSchema" @submit="onSubmit">
           <div class="card__content">
             <div class="card__form">
-              <CheckoutDelivery />
+              <CheckoutDelivery @update:dropshipper="handleDropshipper" />
             </div>
             <div class="card__summary">
               <CheckoutSummary
@@ -31,12 +31,12 @@ import { reactive, ref } from 'vue'
 import CheckoutStepper from '../components/CheckoutStepper.vue'
 import { Form } from 'vee-validate'
 import * as Yup from 'yup'
-import BaseButton from '@/core/components/BaseButton.vue'
 import CheckoutDelivery from '../components/CheckoutDelivery.vue'
 import CheckoutSummary from '../components/CheckoutSummary.vue'
 
 const steps = ['Delivery', 'Payment', 'Finish']
 const activeStep = ref(1)
+const dropshipper = ref(false)
 
 const summary = reactive({
   itemsPurchased: 10,
@@ -48,23 +48,43 @@ const summary = reactive({
   total: 'Rp505.900'
 })
 
+const handleDropshipper = (value: boolean) => {
+  dropshipper.value = value
+}
+
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
   phoneNumber: Yup.string()
     .min(6, 'Phone number must be at least 6 characters')
     .required('Phone number is required'),
   address: Yup.string().required('Address is required'),
-  dropshipperName: Yup.string().required('Dropshipper name is required'),
-  dropshipperPhoneNumber: Yup.string()
-    .min(6, 'Phone number must be at least 6 characters')
-    .required('Phone number is required')
+  dropshipperName: Yup.string().when(() => {
+    if (dropshipper.value) {
+      return Yup.string().required('Dropshipper name is required')
+    }
+  }),
+  dropshipperPhoneNumber: Yup.string().when(() => {
+    if (dropshipper.value) {
+      return Yup.string()
+        .min(6, 'Phone number must be at least 6 characters')
+        .required('Phone number is required')
+    }
+  })
 })
 
 const onSubmit = async (value: any) => {
   handleNext()
 
+  const data = {
+    name: value.name,
+    phoneNumber: value.phoneNumber,
+    address: value.address,
+    dropshipperName: dropshipper.value ? value.dropshipperName : '',
+    dropshipperPhoneNumber: dropshipper.value ? value.dropshipperPhoneNumber : ''
+  }
+
   if (activeStep.value === steps.length) {
-    console.log('submit', value)
+    console.log('submit', data)
 
     return
   }
