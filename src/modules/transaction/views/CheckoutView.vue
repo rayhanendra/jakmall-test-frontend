@@ -2,27 +2,73 @@
   <div class="background">
     <div class="container">
       <div class="card">
-        <CheckoutStepper :steps="['Delivery', 'Payment', 'Finish']" :active-step="activeStep" />
-        <div class="card__content">
-          <div class="title">
-            <div class="title__text">Delivery details</div>
-            <div class="title__line"></div>
+        <CheckoutStepper :steps="steps" :active-step="activeStep" />
+        <Form :validation-schema="validationSchema" @submit="onSubmit">
+          <div class="card__content">
+            <div class="card__form">
+              <CheckoutDelivery />
+            </div>
+            <div class="card__summary">
+              <CheckoutSummary
+                :items-purchased="summary.itemsPurchased"
+                :delivery-estimation="summary.deliveryEstimation"
+                :payment-method="summary.paymentMethod"
+                :cost="summary.cost"
+                :dropshipping="summary.dropshipping"
+                :shipment="summary.shipment"
+                :total="summary.total"
+              />
+            </div>
           </div>
-        </div>
-        <div class="card__summary">
-          <div>Summary</div>
-        </div>
-        <button @click="handleNext">Next</button>
+        </Form>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import CheckoutStepper from '../components/CheckoutStepper.vue'
+import { Form } from 'vee-validate'
+import * as Yup from 'yup'
+import BaseButton from '@/core/components/BaseButton.vue'
+import CheckoutDelivery from '../components/CheckoutDelivery.vue'
+import CheckoutSummary from '../components/CheckoutSummary.vue'
 
+const steps = ['Delivery', 'Payment', 'Finish']
 const activeStep = ref(1)
+
+const summary = reactive({
+  itemsPurchased: 10,
+  deliveryEstimation: '1-2 days',
+  paymentMethod: 'Bank Transfer',
+  cost: 'Rp500.000',
+  dropshipping: 'Rp5.900',
+  shipment: 'Rp15.000',
+  total: 'Rp505.900'
+})
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required('Name is required'),
+  phoneNumber: Yup.string()
+    .min(6, 'Phone number must be at least 6 characters')
+    .required('Phone number is required'),
+  address: Yup.string().required('Address is required'),
+  dropshipperName: Yup.string().required('Dropshipper name is required'),
+  dropshipperPhoneNumber: Yup.string()
+    .min(6, 'Phone number must be at least 6 characters')
+    .required('Phone number is required')
+})
+
+const onSubmit = async (value: any) => {
+  handleNext()
+
+  if (activeStep.value === steps.length) {
+    console.log('submit', value)
+
+    return
+  }
+}
 
 const handleNext = () => {
   activeStep.value += 1
@@ -47,74 +93,27 @@ const handleNext = () => {
   max-height 550px
 
 .card
-  padding auto 40px
   background-color #FFFFFF
   box-shadow 2px 10px 20px rgba(255, 138, 0, 0.1);
   border-radius 4px;
 
-  &__stepper
-    position relative
-    top -35px
-    left 50%
-    transform translateX(-50%)
-    border-radius: 999px
-    background-color #FFFAE6
-    display flex
-    align-items center
-    justify-content space-evenly
-    width 500px
-    height 70px
-
-    &__dot
-      display flex
-      align-items center
-      justify-content space-between
-      gap 10px
-      font-size 16px
-      font-weight bold
-      color #FF8A00
-
-      &__point
-        width 20px
-        height 20px
-        border-radius 50%
-        padding 4px
-        background-color #FF8A00
-        display flex
-        align-items center
-        justify-content center
-        color #FFFFFF
-
-      &__text
-        color #FF8A00
-
   &__content
-    flex-basis 1
+    display flex
+    flex-basis 100%
+
+  &__form
+    flex-basis 70%
+    padding 40px
     flex-direction column
-    width 100%
     height 100%
 
   &__summary
-    padding 40px 0
-    margin-left 40px
-    width 100%
-
-.title
-  margin-bottom 20px
-  display flex
-  flex-direction column
-
-  &__text
-    font-family 'Montserrat'
-    font-size 36px
-    font-weight bold
-    color #FF8A00
-    z-index 1
-
-  &__line
-    position relative
-    bottom 8px
-    width 300px
-    height 8px
-    background-color #EEEEEE
+    flex-basis 30%
+    height 480px
+    padding 0px 20px
+    padding-top 40px
+    padding-bottom 20px
+    border-left 1px solid #FF8A00
+    display flex
+    flex-direction column
 </style>
