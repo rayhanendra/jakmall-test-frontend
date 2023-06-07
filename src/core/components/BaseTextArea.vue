@@ -10,6 +10,7 @@
       :for="name"
       class="text-area__label"
       :class="{
+        'text-area__label--valid': !!inputValue && meta.valid,
         'text-area__label--active': !!focus || !!inputValue,
         'text-area__label--error': !!errorMessage && meta.touched,
         'text-area__label--disabled': disabled
@@ -20,8 +21,10 @@
       class="text-area__input"
       rows="4"
       :class="{
+        'text-area__input--valid': !!inputValue && meta.valid,
         'text-area__input--error': !!errorMessage && meta.touched
       }"
+      :maxlength="200"
       :id="name"
       :name="name"
       :value="inputValue"
@@ -30,6 +33,7 @@
       @input="handleChange"
       @blur="handleBlur"
     />
+    <div class="text-area__counter">{{ 200 - inputValue.length }}</div>
     <p class="text-area__message--error" v-show="(errorMessage && meta.touched) || meta.valid">
       {{ errorMessage }}
     </p>
@@ -107,20 +111,30 @@ const handleBlur = () => {
 
   &__label
     position absolute
-    top 14px
-    left 20px
+    top 16px
+    left 1px
+    padding 4px 20px 0 20px
     font-size 16px
     font-weight 500
     color #999999
-    transform translateY(50%)
+    width 80%
+    background #FFFFFF
+
+    transform translateY(0%)
     transition transform 0.2s ease-in-out, font-size 0.2s ease-in-out
 
     &--active
-      transform translateY(-60%)
+      transform translateY(-90%)
       font-size 13px
+
+    &--valid
+      color #1BD97B
 
     &--error
       color #FF8A00
+
+    &--disabled
+      color #E0E0E0
 
   &__input
     box-sizing border-box
@@ -140,8 +154,15 @@ const handleBlur = () => {
       border 1px solid #FF8A00
       border-radius none
 
+    &--valid
+      border 1px solid #1BD97B
+
     &--error
       border 1px solid #FF8A00
+
+    &--disabled
+      border 1px solid #E0E0E0
+      cursor not-allowed
 
   &__message
     font-size 14px
@@ -153,12 +174,15 @@ const handleBlur = () => {
       display block
       color #FF8A00
 
-  // &--disabled
-  //   &__label
-  //     color #BDBDBD
+    &--disabled
+      display none
 
-  //   &__input
-  //     border 1px solid #BDBDBD
-  //     background-color #F5F5F5
-  //     cursor not-allowed
+  &__counter
+    position relative
+    top -26px
+    right 20px
+    float right
+    font-size 14px
+    font-weight 500
+    color #999999
 </style>

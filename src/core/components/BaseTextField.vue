@@ -5,6 +5,7 @@
         :for="name"
         class="text-field__label"
         :class="{
+          'text-field__label--valid': !!inputValue && meta.valid,
           'text-field__label--active': !!focus || !!inputValue,
           'text-field__label--error': !!errorMessage && meta.touched,
           'text-field__label--disabled': disabled
@@ -16,8 +17,9 @@
         type="text"
         class="text-field__input"
         :class="{
+          'text-field__input--valid': !!inputValue && meta.valid,
           'text-field__input--error': !!errorMessage && meta.touched,
-          'text-field--input__disabled': disabled
+          'text-field__input--disabled': disabled
         }"
         :id="name"
         :name="name"
@@ -34,7 +36,9 @@
         maxlength="20"
         class="text-field__input"
         :class="{
-          'text-field__input--error': !!errorMessage && meta.touched
+          'text-field__input--valid': !!inputValue && meta.valid,
+          'text-field__input--error': !!errorMessage && meta.touched,
+          'text-field__input--disabled': disabled
         }"
         :id="name"
         :name="name"
@@ -46,7 +50,13 @@
         @blur="handleBlur"
       />
     </div>
-    <p class="text-field__message--error" v-show="(errorMessage && meta.touched) || meta.valid">
+    <p
+      v-show="errorMessage && meta.touched"
+      class="text-field__message--error"
+      :class="{
+        'text-field__message--disabled': disabled
+      }"
+    >
       {{ errorMessage }}
     </p>
   </div>
@@ -54,7 +64,7 @@
 
 <script setup lang="ts">
 import { useField } from 'vee-validate'
-import { ref, toRef } from 'vue'
+import { ref, toRef, watch } from 'vue'
 
 const props = defineProps({
   type: {
@@ -99,10 +109,18 @@ const {
   errorMessage,
   handleBlur: veeBlur,
   handleChange,
-  meta
+  meta,
+  setValue
 } = useField(name, undefined, {
   initialValue: props.value
 })
+
+watch(
+  () => props.disabled,
+  () => {
+    setValue('')
+  }
+)
 
 const focus = ref(false)
 
@@ -143,8 +161,14 @@ const handleKeyPress = (event: KeyboardEvent) => {
       transform translateY(-60%)
       font-size 13px
 
+    &--valid
+      color #1BD97B
+
     &--error
       color #FF8A00
+
+    &--disabled
+      color #E0E0E0
 
   &__input
     box-sizing border-box
@@ -162,8 +186,15 @@ const handleKeyPress = (event: KeyboardEvent) => {
     &:focus
       border 1px solid #FF8A00
 
+    &--valid
+      border 1px solid #1BD97B
+
     &--error
       border 1px solid #FF8A00
+
+    &--disabled
+      border 1px solid #E0E0E0
+      cursor not-allowed
 
   &__message
     font-size 14px
@@ -175,12 +206,6 @@ const handleKeyPress = (event: KeyboardEvent) => {
       display block
       color #FF8A00
 
-  // &--disabled
-  //   &__label
-  //     color #BDBDBD
-
-  //   &__input
-  //     border 1px solid #BDBDBD
-  //     background-color #F5F5F5
-  //     cursor not-allowed
+    &--disabled
+      display none
 </style>
