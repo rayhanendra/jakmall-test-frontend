@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import CheckoutStepper from '../components/CheckoutStepper.vue'
 import { Form } from 'vee-validate'
 import * as Yup from 'yup'
@@ -37,10 +37,9 @@ import CheckoutBack from '../components/CheckoutBack.vue'
 const router = useRouter()
 
 const checkoutStore = useCheckoutStore()
-const { checkout, activeStep } = storeToRefs(checkoutStore)
+const { checkout, activeStep, dropshipper } = storeToRefs(checkoutStore)
 
 const steps = ['Delivery', 'Payment', 'Finish']
-const dropshipper = ref(false)
 
 // Note: Initialize the form values based on the persisted state from store
 const initialValues = reactive({
@@ -74,7 +73,6 @@ const validationSchema = Yup.object().shape({
 })
 
 const onSubmit = async (value: any) => {
-  // TODO: fix the dropshipper value not being set
   // Note: Set the checkout state to the store
   checkoutStore.setCheckout({
     ...checkout.value,
@@ -102,11 +100,6 @@ const onSubmit = async (value: any) => {
 
     return
   }
-}
-
-// TODO: fix the dropshipper value not being set, need to use store
-const handleDropshipper = (value: boolean) => {
-  dropshipper.value = value
 }
 
 const handleBack = () => {

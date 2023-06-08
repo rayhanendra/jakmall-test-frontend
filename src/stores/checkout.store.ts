@@ -4,6 +4,7 @@ export const useCheckoutStore = defineStore({
   id: 'checkout',
   state: () => ({
     activeStep: 1,
+    dropshipper: false,
     checkout: {
       name: '',
       phoneNumber: '',
@@ -26,6 +27,10 @@ export const useCheckoutStore = defineStore({
   actions: {
     setActiveStep(step: number) {
       this.activeStep = step
+    },
+
+    setDropshipper(dropshipper: boolean) {
+      this.dropshipper = dropshipper
     },
 
     setCheckout(checkout: any) {

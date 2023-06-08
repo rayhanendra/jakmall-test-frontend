@@ -42,19 +42,15 @@
 import BaseFormTitle from '@/core/components/BaseFormTitle.vue'
 import BaseTextField from '@/core/components/BaseTextField.vue'
 import BaseTextArea from '@/core/components/BaseTextArea.vue'
-import { ref, watch } from 'vue'
+import { watch } from 'vue'
 import { useCheckoutStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 
 const checkoutStore = useCheckoutStore()
-const { checkout } = storeToRefs(checkoutStore)
-
-const emit = defineEmits(['update:dropshipper'])
-
-const dropshipper = ref(false)
+const { checkout, dropshipper } = storeToRefs(checkoutStore)
 
 watch(dropshipper, (value) => {
-  emit('update:dropshipper', value)
+  checkoutStore.setDropshipper(value)
 })
 </script>
 
