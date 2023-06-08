@@ -8,21 +8,28 @@
   </div>
   <div class="form">
     <div class="form__main">
-      <BaseTextField type="text" name="name" label="Name" />
-      <BaseTextField type="tel" name="phoneNumber" label="Phone Number" />
-      <BaseTextArea name="address" label="Delivery Address" />
+      <BaseTextField type="text" name="name" label="Name" :value="checkout.name" />
+      <BaseTextField
+        type="tel"
+        name="phoneNumber"
+        label="Phone Number"
+        :value="checkout.phoneNumber"
+      />
+      <BaseTextArea name="address" label="Delivery Address" :value="checkout.address" />
     </div>
     <div class="form__dropshipper">
       <BaseTextField
         type="text"
         name="dropshipperName"
         label="Dropshipper Name"
+        :value="checkout.dropshipperName"
         :disabled="!dropshipper"
       />
       <BaseTextField
         type="tel"
         name="dropshipperPhoneNumber"
         label="Dropshipper Phone Number"
+        :value="checkout.dropshipperPhoneNumber"
         :disabled="!dropshipper"
       />
     </div>
@@ -34,6 +41,11 @@ import BaseFormTitle from '@/core/components/BaseFormTitle.vue'
 import BaseTextField from '@/core/components/BaseTextField.vue'
 import BaseTextArea from '@/core/components/BaseTextArea.vue'
 import { ref, watch } from 'vue'
+import { useCheckoutStore } from '@/stores'
+import { storeToRefs } from 'pinia'
+
+const checkoutStore = useCheckoutStore()
+const { checkout } = storeToRefs(checkoutStore)
 
 const emit = defineEmits(['update:dropshipper'])
 

@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/checkout/:slug',
       name: 'Checkout',
-      component: () => import('@/modules/transaction/views/CheckoutView.vue')
+      component: () => import('@/modules/transaction/views/CheckoutView.vue'),
     }
   ]
 })
