@@ -9,10 +9,8 @@
           @submit="onSubmit"
         >
           <div class="card__content">
-            <div class="card__back" @click="handleBack">
-              {{ backLabel[activeStep] }}
-            </div>
-            <div class="card__form">  
+            <CheckoutBack :active-step="activeStep" @click="handleBack" />
+            <div class="card__form">
               <!-- Note: The activeStep is based on the persisted state from store -->
               <CheckoutDelivery v-if="activeStep === 1" @update:dropshipper="handleDropshipper" />
               <CheckoutPayment v-if="activeStep === 2" />
@@ -46,19 +44,13 @@ import CheckoutPayment from '../components/CheckoutPayment.vue'
 import { useCheckoutStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
+import CheckoutBack from '../components/CheckoutBack.vue'
 
 const router = useRouter()
 
 const checkoutStore = useCheckoutStore()
 const { checkout, activeStep } = storeToRefs(checkoutStore)
 
-const backLabel: {
-  [key: number]: string
-} = {
-  1: 'Back to Cart',
-  2: 'Back to Delivery',
-  3: 'Back to Payment'
-}
 const steps = ['Delivery', 'Payment', 'Finish']
 const dropshipper = ref(false)
 
@@ -190,14 +182,6 @@ const handleNext = () => {
   &__content
     display flex
     flex-basis 100%
-
-  &__back
-    position absolute
-    margin-left 40px
-    color #FF8A00
-    font-size 14px
-    font-weight 500
-    cursor pointer
 
   &__form
     flex-basis 70%
