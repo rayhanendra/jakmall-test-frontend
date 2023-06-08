@@ -12,6 +12,7 @@ const router = createRouter({
       path: '/checkout/:slug',
       name: 'Checkout',
       component: () => import('@/modules/transaction/views/CheckoutView.vue'),
+      redirect: { name: 'Delivery' },
       children: [
         {
           path: 'delivery',
@@ -22,6 +23,11 @@ const router = createRouter({
           path: 'payment',
           name: 'Payment',
           component: () => import('@/modules/transaction/views/CheckoutPaymentView.vue')
+        },
+        {
+          path: 'finish',
+          name: 'Finish',
+          component: () => import('@/modules/transaction/views/CheckoutFinishView.vue')
         }
       ]
     }

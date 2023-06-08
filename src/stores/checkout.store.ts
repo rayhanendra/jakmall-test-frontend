@@ -44,6 +44,29 @@ export const useCheckoutStore = defineStore({
 
     setPayment(payment: any) {
       this.checkout.payment = payment
+    },
+
+    reset() {
+      this.activeStep = 1
+      this.dropshipper = false
+      this.checkout = {
+        name: '',
+        phoneNumber: '',
+        address: '',
+        dropshipperName: '',
+        dropshipperPhoneNumber: '',
+        shipment: {
+          label: '',
+          value: '',
+          duration: '',
+          price: 0
+        },
+        payment: {
+          label: '',
+          value: '',
+          money: 0
+        }
+      }
     }
   },
   persist: true

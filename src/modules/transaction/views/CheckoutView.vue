@@ -104,6 +104,9 @@ const onSubmit = async (value: any) => {
 
 const handleBack = () => {
   if (activeStep.value === 1) {
+    router.push({
+      name: 'Home'
+    })
     return
   }
 
@@ -153,7 +156,7 @@ const handleNext = () => {
     flex-basis 70%
     padding 40px
     flex-direction column
-    height 100%
+    // height 100%
 
   &__summary
     flex-basis 30%
