@@ -8,6 +8,7 @@ interface Checkout {
     label: string
     value: string
     duration: string
+    price: number
   }
   payment: {
     label: string

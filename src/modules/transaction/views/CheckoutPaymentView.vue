@@ -3,7 +3,7 @@
     <div class="payment__item">
       <BaseFormTitle title="Shipment" />
       <CheckoutPaymentChoices
-        :select="shipment"
+        :select="shipmentId"
         :choiceOptions="shipmentOptions"
         @select="handleShipment"
       />
@@ -66,14 +66,22 @@ const paymentOptions = [
   }
 ]
 
-const shipment = ref('')
+const shipmentId = ref('')
+const shipment = ref({
+  label: '',
+  value: '',
+  price: 0,
+  duration: ''
+})
+
 const payment = ref('')
 
 watch(
   checkout.value.shipment,
   () => {
     if (checkout.value.shipment) {
-      shipment.value = checkout.value.shipment.value
+      shipmentId.value = checkout.value.shipment.value
+      shipment.value = checkout.value.shipment
     }
   },
   {
@@ -94,8 +102,8 @@ watch(
 )
 
 const handleShipment = (value: string) => {
-  shipment.value = value
-  checkoutStore.setShipment(shipmentOptions.find((option) => option.value === value)!)
+  shipmentId.value = value
+  checkoutStore.setShipment(shipmentOptions.find((option) => option.value === shipmentId.value)!)
 }
 
 const handlePayment = (value: string) => {

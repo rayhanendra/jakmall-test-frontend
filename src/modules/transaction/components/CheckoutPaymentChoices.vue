@@ -24,8 +24,8 @@
           'choices__item__value--active': choice.value === select
         }"
       >
-        {{ choice?.price ? `Rp${choice.price.toLocaleString('id-ID')}` : '' }}
-        {{ choice?.money ? `Rp${choice.money.toLocaleString('id-ID')}` : '' }}
+        {{ choice?.price ? $filters.formatCurrency(choice.price) : '' }}
+        {{ choice?.money ? $filters.formatCurrency(choice.money) + ' left' : '' }}
       </div>
     </div>
   </div>

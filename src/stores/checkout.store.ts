@@ -15,7 +15,8 @@ export const useCheckoutStore = defineStore({
       shipment: {
         label: '',
         value: '',
-        duration: ''
+        duration: '',
+        price: 0
       },
       payment: {
         label: '',

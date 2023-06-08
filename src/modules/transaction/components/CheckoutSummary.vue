@@ -2,7 +2,7 @@
   <div class="summary__title">Summary</div>
   <div class="summary__main">
     <div class="summary__main__content">
-      <div class="summary__main__content__total">{{ data.itemsPurchased }} items purchased</div>
+      <div class="summary__main__content__total">{{ summary.itemsPurchased }} items purchased</div>
       <div
         class="summary__main__content__divider"
         :class="{
@@ -39,19 +39,27 @@
     <div class="summary__main__pricing">
       <div class="summary__main__pricing__item">
         <div class="summary__main__pricing__item__label">Cost of goods</div>
-        <div class="summary__main__pricing__item__value">{{ data.cost }}</div>
+        <div class="summary__main__pricing__item__value">
+          {{ $filters.formatCurrency(summary.cost) }}
+        </div>
       </div>
-      <div class="summary__main__pricing__item">
+      <div v-if="dropshipper" class="summary__main__pricing__item">
         <div class="summary__main__pricing__item__label">Dropshipping Free</div>
-        <div class="summary__main__pricing__item__value">{{ data.dropshipping }}</div>
+        <div class="summary__main__pricing__item__value">
+          {{ $filters.formatCurrency(summary.dropshipping) }}
+        </div>
       </div>
       <div class="summary__main__pricing__item">
         <div class="summary__main__pricing__item__label"><b>GO-SEND</b> shipment</div>
-        <div class="summary__main__pricing__item__value">{{ data.shipment }}</div>
+        <div class="summary__main__pricing__item__value">
+          {{ $filters.formatCurrency(summary.shipment) }}
+        </div>
       </div>
       <div class="summary__main__pricing__total">
         <div class="summary__main__pricing__total__label">Total</div>
-        <div class="summary__main__pricing__total__value">{{ data.total }}</div>
+        <div class="summary__main__pricing__total__value">
+          {{ $filters.formatCurrency(summary.total) }}
+        </div>
       </div>
       <BaseButton>Continue to Payment</BaseButton>
     </div>
@@ -65,16 +73,16 @@ import { storeToRefs } from 'pinia'
 import { reactive, watch } from 'vue'
 
 const checkoutStore = useCheckoutStore()
-const { checkout } = storeToRefs(checkoutStore)
+const { checkout, dropshipper } = storeToRefs(checkoutStore)
 
-const data = reactive({
+const summary = reactive({
   itemsPurchased: 10,
   shipping: false,
   payment: false,
-  cost: 'Rp500.000',
-  dropshipping: 'Rp5.900',
-  shipment: 'Rp15.000',
-  total: 'Rp505.900'
+  cost: 500000,
+  dropshipping: 0,
+  shipment: checkout.value.shipment.price,
+  total: 0
 })
 
 const shipment = reactive({
@@ -85,6 +93,13 @@ const shipment = reactive({
 const payment = reactive({
   label: checkout.value.payment.label
 })
+
+watch(
+  () => checkoutStore.checkout.shipment.price,
+  (value) => {
+    summary.shipment = value
+  }
+)
 
 watch(
   () => checkoutStore.checkout.shipment,
@@ -98,6 +113,27 @@ watch(
   () => checkout.value.payment,
   (value) => {
     payment.label = value.label
+  }
+)
+
+watch(
+  () => dropshipper.value,
+  (value) => {
+    summary.dropshipping = value ? 5900 : 0
+  },
+  {
+    immediate: true
+  }
+)
+
+watch(
+  () => summary,
+  (value) => {
+    summary.total = value.cost + value.shipment + value.dropshipping
+  },
+  {
+    deep: true,
+    immediate: true
   }
 )
 </script>
