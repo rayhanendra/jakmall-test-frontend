@@ -11,20 +11,10 @@
           <div class="card__content">
             <CheckoutBack :active-step="activeStep" @click="handleBack" />
             <div class="card__form">
-              <!-- Note: The activeStep is based on the persisted state from store -->
-              <CheckoutDelivery v-if="activeStep === 1" @update:dropshipper="handleDropshipper" />
-              <CheckoutPayment v-if="activeStep === 2" />
+              <router-view />
             </div>
             <div class="card__summary">
-              <CheckoutSummary
-                :items-purchased="summary.itemsPurchased"
-                :delivery-estimation="summary.deliveryEstimation"
-                :payment-method="summary.paymentMethod"
-                :cost="summary.cost"
-                :dropshipping="summary.dropshipping"
-                :shipment="summary.shipment"
-                :total="summary.total"
-              />
+              <CheckoutSummary />
             </div>
           </div>
         </Form>
@@ -34,13 +24,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref } from 'vue'
 import CheckoutStepper from '../components/CheckoutStepper.vue'
 import { Form } from 'vee-validate'
 import * as Yup from 'yup'
-import CheckoutDelivery from '../components/CheckoutDelivery.vue'
 import CheckoutSummary from '../components/CheckoutSummary.vue'
-import CheckoutPayment from '../components/CheckoutPayment.vue'
 import { useCheckoutStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
@@ -54,25 +42,13 @@ const { checkout, activeStep } = storeToRefs(checkoutStore)
 const steps = ['Delivery', 'Payment', 'Finish']
 const dropshipper = ref(false)
 
-const summary = reactive({
-  itemsPurchased: 10,
-  deliveryEstimation: '1-2 days',
-  paymentMethod: 'Bank Transfer',
-  cost: 'Rp500.000',
-  dropshipping: 'Rp5.900',
-  shipment: 'Rp15.000',
-  total: 'Rp505.900'
-})
-
 // Note: Initialize the form values based on the persisted state from store
-const initialValues = reactive<Checkout>({
+const initialValues = reactive({
   name: checkout.value.name,
   phoneNumber: checkout.value.phoneNumber,
   address: checkout.value.address,
   dropshipperName: checkout.value.dropshipperName,
-  dropshipperPhoneNumber: checkout.value.dropshipperPhoneNumber,
-  shipment: '',
-  payment: ''
+  dropshipperPhoneNumber: checkout.value.dropshipperPhoneNumber
 })
 
 const validationSchema = Yup.object().shape({
@@ -97,19 +73,11 @@ const validationSchema = Yup.object().shape({
   })
 })
 
-// Note: Every time the activeStep changes, it will trigger the watch function, and then it will push the query to the router
-watch(
-  activeStep,
-  () => {
-    router.push({ query: { step: steps[activeStep.value - 1] } })
-  },
-  {
-    immediate: true
-  }
-)
-
 const onSubmit = async (value: any) => {
+  // TODO: fix the dropshipper value not being set
+  // Note: Set the checkout state to the store
   checkoutStore.setCheckout({
+    ...checkout.value,
     name: value.name,
     phoneNumber: value.phoneNumber,
     address: value.address,
@@ -119,14 +87,14 @@ const onSubmit = async (value: any) => {
 
   handleNext()
 
-  const data: Checkout = {
+  const data = {
     name: value.name,
     phoneNumber: value.phoneNumber,
     address: value.address,
     dropshipperName: dropshipper.value ? value.dropshipperName : '',
-    dropshipperPhoneNumber: dropshipper.value ? value.dropshipperPhoneNumber : '',
-    shipment: '',
-    payment: ''
+    dropshipperPhoneNumber: dropshipper.value ? value.dropshipperPhoneNumber : ''
+
+    // TODO: add shipment and payment data
   }
 
   if (activeStep.value === steps.length) {
@@ -136,28 +104,33 @@ const onSubmit = async (value: any) => {
   }
 }
 
+// TODO: fix the dropshipper value not being set, need to use store
 const handleDropshipper = (value: boolean) => {
   dropshipper.value = value
 }
 
 const handleBack = () => {
-  activeStep.value -= 1
-  checkoutStore.setActiveStep(activeStep.value)
-
-  if (activeStep.value < 1) {
-    activeStep.value = 1
-    checkoutStore.setActiveStep(activeStep.value)
+  if (activeStep.value === 1) {
+    return
   }
+
+  activeStep.value -= 1
+
+  router.push({
+    name: steps[activeStep.value - 1]
+  })
 }
 
 const handleNext = () => {
-  activeStep.value += 1
-  checkoutStore.setActiveStep(activeStep.value)
-
-  if (activeStep.value > 3) {
-    activeStep.value = 1
-    checkoutStore.setActiveStep(activeStep.value)
+  if (activeStep.value === steps.length) {
+    return
   }
+
+  activeStep.value += 1
+
+  router.push({
+    name: steps[activeStep.value - 1]
+  })
 }
 </script>
 

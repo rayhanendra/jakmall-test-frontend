@@ -4,6 +4,14 @@ interface Checkout {
   address: string
   dropshipperName: string
   dropshipperPhoneNumber: string
-  shipment: string
-  payment: string
+  shipment: {
+    label: string
+    value: string
+    duration: string
+  }
+  payment: {
+    label: string
+    value: string
+    money?: number
+  }
 }

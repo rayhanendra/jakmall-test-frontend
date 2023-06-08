@@ -11,8 +11,16 @@ export const useCheckoutStore = defineStore({
       dropshipperName: '',
       dropshipperPhoneNumber: '',
 
-      shipment: '',
-      payment: ''
+      shipment: {
+        label: '',
+        value: '',
+        duration: ''
+      },
+      payment: {
+        label: '',
+        value: '',
+        money: 0
+      }
     } as Checkout
   }),
   actions: {
@@ -22,6 +30,14 @@ export const useCheckoutStore = defineStore({
 
     setCheckout(checkout: any) {
       this.checkout = checkout
+    },
+
+    setShipment(shipment: any) {
+      this.checkout.shipment = shipment
+    },
+
+    setPayment(payment: any) {
+      this.checkout.payment = payment
     }
   },
   persist: true

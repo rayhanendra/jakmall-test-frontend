@@ -2,34 +2,56 @@
   <div class="summary__title">Summary</div>
   <div class="summary__main">
     <div class="summary__main__content">
-      <div class="summary__main__content__total">{{ itemsPurchased }} items purchased</div>
-      <div class="summary__main__content__divider"></div>
-      <div class="summary__main__content__item">
+      <div class="summary__main__content__total">{{ data.itemsPurchased }} items purchased</div>
+      <div
+        class="summary__main__content__divider"
+        :class="{
+          'summary__main__content__divider--hidden': shipment.label === ''
+        }"
+      ></div>
+      <div
+        class="summary__main__content__item"
+        :class="{
+          'summary__main__content__item--hidden': shipment.label === ''
+        }"
+      >
         <div class="summary__main__content__item__label">Delivery estimation</div>
-        <div class="summary__main__content__item__value">{{ deliveryEstimation }}</div>
+        <div class="summary__main__content__item__value">
+          {{ shipment.duration }} by {{ shipment.label }}
+        </div>
       </div>
-      <div class="summary__main__content__divider"></div>
-      <div class="summary__main__content__item">
+      <div
+        class="summary__main__content__divider"
+        :class="{
+          'summary__main__content__divider--hidden': payment.label === ''
+        }"
+      ></div>
+      <div
+        class="summary__main__content__item"
+        :class="{
+          'summary__main__content__item--hidden': payment.label === ''
+        }"
+      >
         <div class="summary__main__content__item__label">Payment method</div>
-        <div class="summary__main__content__item__value">{{ paymentMethod }}</div>
+        <div class="summary__main__content__item__value">{{ payment.label }}</div>
       </div>
     </div>
     <div class="summary__main__pricing">
       <div class="summary__main__pricing__item">
         <div class="summary__main__pricing__item__label">Cost of goods</div>
-        <div class="summary__main__pricing__item__value">{{ cost }}</div>
+        <div class="summary__main__pricing__item__value">{{ data.cost }}</div>
       </div>
       <div class="summary__main__pricing__item">
         <div class="summary__main__pricing__item__label">Dropshipping Free</div>
-        <div class="summary__main__pricing__item__value">{{ dropshipping }}</div>
+        <div class="summary__main__pricing__item__value">{{ data.dropshipping }}</div>
       </div>
       <div class="summary__main__pricing__item">
         <div class="summary__main__pricing__item__label"><b>GO-SEND</b> shipment</div>
-        <div class="summary__main__pricing__item__value">{{ shipment }}</div>
+        <div class="summary__main__pricing__item__value">{{ data.shipment }}</div>
       </div>
       <div class="summary__main__pricing__total">
         <div class="summary__main__pricing__total__label">Total</div>
-        <div class="summary__main__pricing__total__value">{{ total }}</div>
+        <div class="summary__main__pricing__total__value">{{ data.total }}</div>
       </div>
       <BaseButton>Continue to Payment</BaseButton>
     </div>
@@ -38,37 +60,46 @@
 
 <script setup lang="ts">
 import BaseButton from '@/core/components/BaseButton.vue'
+import { useCheckoutStore } from '@/stores'
+import { storeToRefs } from 'pinia'
+import { reactive, watch } from 'vue'
 
-defineProps({
-  itemsPurchased: {
-    type: Number,
-    required: true
-  },
-  deliveryEstimation: {
-    type: String,
-    required: true
-  },
-  paymentMethod: {
-    type: String,
-    required: true
-  },
-  cost: {
-    type: String,
-    required: true
-  },
-  dropshipping: {
-    type: String,
-    required: true
-  },
-  shipment: {
-    type: String,
-    required: true
-  },
-  total: {
-    type: String,
-    required: true
-  }
+const checkoutStore = useCheckoutStore()
+const { checkout } = storeToRefs(checkoutStore)
+
+const data = reactive({
+  itemsPurchased: 10,
+  shipping: false,
+  payment: false,
+  cost: 'Rp500.000',
+  dropshipping: 'Rp5.900',
+  shipment: 'Rp15.000',
+  total: 'Rp505.900'
 })
+
+const shipment = reactive({
+  duration: checkout.value.shipment.duration,
+  label: checkout.value.shipment.label
+})
+
+const payment = reactive({
+  label: checkout.value.payment.label
+})
+
+watch(
+  () => checkoutStore.checkout.shipment,
+  (value) => {
+    shipment.duration = value.duration
+    shipment.label = value.label
+  }
+)
+
+watch(
+  () => checkout.value.payment,
+  (value) => {
+    payment.label = value.label
+  }
+)
 </script>
 
 <style scoped lang="stylus">
@@ -102,6 +133,9 @@ defineProps({
           width 30%
           margin 10px 0
 
+          &--hidden
+            display none
+
         &__item
           display flex
           flex-direction column
@@ -115,6 +149,9 @@ defineProps({
             font-size 16px
             color #1BD97B
             font-weight 600
+
+          &--hidden
+            display none
 
       &__pricing
         display flex

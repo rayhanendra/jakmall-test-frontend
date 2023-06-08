@@ -1,37 +1,39 @@
 <template>
-  <div class="delivery__title">
-    <BaseFormTitle title="Delivery details" />
-    <div class="input">
-      <input v-model="dropshipper" type="checkbox" id="dropshipper" />
-      <label for="dropshipper">Send as Dropshipper</label>
+  <div>
+    <div class="delivery__title">
+      <BaseFormTitle title="Delivery details" />
+      <div class="input">
+        <input v-model="dropshipper" type="checkbox" id="dropshipper" />
+        <label for="dropshipper">Send as Dropshipper</label>
+      </div>
     </div>
-  </div>
-  <div class="form">
-    <div class="form__main">
-      <BaseTextField type="text" name="name" label="Name" :value="checkout.name" />
-      <BaseTextField
-        type="tel"
-        name="phoneNumber"
-        label="Phone Number"
-        :value="checkout.phoneNumber"
-      />
-      <BaseTextArea name="address" label="Delivery Address" :value="checkout.address" />
-    </div>
-    <div class="form__dropshipper">
-      <BaseTextField
-        type="text"
-        name="dropshipperName"
-        label="Dropshipper Name"
-        :value="checkout.dropshipperName"
-        :disabled="!dropshipper"
-      />
-      <BaseTextField
-        type="tel"
-        name="dropshipperPhoneNumber"
-        label="Dropshipper Phone Number"
-        :value="checkout.dropshipperPhoneNumber"
-        :disabled="!dropshipper"
-      />
+    <div class="form">
+      <div class="form__main">
+        <BaseTextField type="text" name="name" label="Name" :value="checkout.name" />
+        <BaseTextField
+          type="tel"
+          name="phoneNumber"
+          label="Phone Number"
+          :value="checkout.phoneNumber"
+        />
+        <BaseTextArea name="address" label="Delivery Address" :value="checkout.address" />
+      </div>
+      <div class="form__dropshipper">
+        <BaseTextField
+          type="text"
+          name="dropshipperName"
+          label="Dropshipper Name"
+          :value="checkout.dropshipperName"
+          :disabled="!dropshipper"
+        />
+        <BaseTextField
+          type="tel"
+          name="dropshipperPhoneNumber"
+          label="Dropshipper Phone Number"
+          :value="checkout.dropshipperPhoneNumber"
+          :disabled="!dropshipper"
+        />
+      </div>
     </div>
   </div>
 </template>
