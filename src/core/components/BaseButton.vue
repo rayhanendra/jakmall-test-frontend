@@ -1,10 +1,14 @@
 <template>
-  <button type="submit" class="button">
+  <button type="submit" class="button" :disabled="disabled">
     <slot></slot>
   </button>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineProps({
+  disabled: Boolean
+})
+</script>
 
 <style scoped lang="stylus">
 .button
@@ -24,4 +28,9 @@
     &:hover
         background-color #FF8A00
         opacity 0.8
+
+    &:disabled
+        background-color #FF8A00
+        opacity 0.5
+        cursor not-allowed
 </style>

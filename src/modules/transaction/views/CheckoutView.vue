@@ -5,11 +5,11 @@
         <CheckoutStepper :steps="steps" :active-step="activeStep" />
         <Form
           :initial-values="initialValues"
-          :validation-schema="validationSchema"
+          :validation-schema="validationSchema[activeStep - 1]"
           @submit="onSubmit"
         >
           <div class="card__content">
-            <CheckoutBack :active-step="activeStep" @click="handleBack" />
+            <CheckoutBack v-if="isStepNotThree" :active-step="activeStep" @click="handleBack" />
             <div class="card__form">
               <router-view />
             </div>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, onBeforeUnmount, reactive, watch } from 'vue'
 import CheckoutStepper from '../components/CheckoutStepper.vue'
 import { Form } from 'vee-validate'
 import * as Yup from 'yup'
@@ -50,27 +50,32 @@ const initialValues = reactive({
   dropshipperPhoneNumber: checkout.value.dropshipperPhoneNumber
 })
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required('Name is required'),
-  phoneNumber: Yup.string()
-    .min(6, 'Phone number must be at least 6 characters')
-    .required('Phone number is required'),
-  address: Yup.string().required('Address is required'),
-  // Note: The following error is from Yup, but it's not a problem. Forgive me please :(
-  dropshipperName: Yup.string().when(() => {
-    if (dropshipper.value) {
-      return Yup.string().required('Dropshipper name is required')
-    }
+const validationSchema = [
+  Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    phoneNumber: Yup.string()
+      .min(6, 'Phone number must be at least 6 characters')
+      .required('Phone number is required'),
+    address: Yup.string().required('Address is required'),
+    // Note: The following error is from Yup, but it's not a problem. Forgive me please :')
+    // @ts-ignore
+    dropshipperName: Yup.string().when(() => {
+      if (dropshipper.value) {
+        return Yup.string().required('Dropshipper name is required')
+      }
+    }),
+    // Note: The following error is from Yup, but it's not a problem. Forgive me please :')
+    // @ts-ignore
+    dropshipperPhoneNumber: Yup.string().when(() => {
+      if (dropshipper.value) {
+        return Yup.string()
+          .min(6, 'Phone number must be at least 6 characters')
+          .required('Phone number is required')
+      }
+    })
   }),
-  // Note: The following error is from Yup, but it's not a problem. Forgive me please :(
-  dropshipperPhoneNumber: Yup.string().when(() => {
-    if (dropshipper.value) {
-      return Yup.string()
-        .min(6, 'Phone number must be at least 6 characters')
-        .required('Phone number is required')
-    }
-  })
-})
+  Yup.object().shape({})
+]
 
 const onSubmit = async (value: any) => {
   // Note: Set the checkout state to the store
@@ -85,25 +90,30 @@ const onSubmit = async (value: any) => {
 
   handleNext()
 
-  const data = {
-    name: value.name,
-    phoneNumber: value.phoneNumber,
-    address: value.address,
-    dropshipperName: dropshipper.value ? value.dropshipperName : '',
-    dropshipperPhoneNumber: dropshipper.value ? value.dropshipperPhoneNumber : ''
-
-    // TODO: add shipment and payment data
-  }
-
   if (activeStep.value === steps.length) {
-    console.log('submit', data)
+    console.log('SUBMITTED DATA', checkout.value)
+    alert('Checkout success')
 
     return
   }
 }
 
+onBeforeUnmount(() => {
+  checkoutStore.reset()
+})
+
+watch(
+  () => router.currentRoute.value.meta.step,
+  (value) => {
+    checkoutStore.setActiveStep(value as number)
+  },
+  {
+    immediate: true
+  }
+)
+
 const handleBack = () => {
-  if (activeStep.value === 1) {
+  if (router.currentRoute.value.meta.step === 1) {
     router.push({
       name: 'Home'
     })
@@ -118,16 +128,16 @@ const handleBack = () => {
 }
 
 const handleNext = () => {
-  if (activeStep.value === steps.length) {
-    return
-  }
-
   activeStep.value += 1
 
   router.push({
     name: steps[activeStep.value - 1]
   })
 }
+
+const isStepNotThree = computed(() => {
+  return router.currentRoute.value.meta.step !== 3
+})
 </script>
 
 <style scoped lang="stylus">
@@ -165,6 +175,7 @@ const handleNext = () => {
     padding-top 40px
     padding-bottom 20px
     border-left 1px solid #FF8A00
+    border-color rgba(255, 138, 0, 0.2)
     display flex
     flex-direction column
 </style>

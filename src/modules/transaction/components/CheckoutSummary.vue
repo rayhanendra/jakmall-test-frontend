@@ -2,18 +2,16 @@
   <div class="summary__title">Summary</div>
   <div class="summary__main">
     <div class="summary__main__content">
-      <div class="summary__main__content__total">{{ summary.itemsPurchased }} items purchased</div>
+      <div class="summary__main__content__total" v-if="summary.itemsPurchased !== 0">
+        {{ summary.itemsPurchased }} items purchased
+      </div>
       <div
         class="summary__main__content__divider"
-        :class="{
-          'summary__main__content__divider--hidden': shipment.label === ''
-        }"
+        :class="{ 'summary__main__content__divider--hidden': isShipmentHidden }"
       ></div>
       <div
         class="summary__main__content__item"
-        :class="{
-          'summary__main__content__item--hidden': shipment.label === ''
-        }"
+        :class="{ 'summary__main__content__item--hidden': isShipmentHidden }"
       >
         <div class="summary__main__content__item__label">Delivery estimation</div>
         <div class="summary__main__content__item__value">
@@ -22,15 +20,11 @@
       </div>
       <div
         class="summary__main__content__divider"
-        :class="{
-          'summary__main__content__divider--hidden': payment.label === ''
-        }"
+        :class="{ 'summary__main__content__divider--hidden': isPaymentHidden }"
       ></div>
       <div
         class="summary__main__content__item"
-        :class="{
-          'summary__main__content__item--hidden': payment.label === ''
-        }"
+        :class="{ 'summary__main__content__item--hidden': isPaymentHidden }"
       >
         <div class="summary__main__content__item__label">Payment method</div>
         <div class="summary__main__content__item__value">{{ payment.label }}</div>
@@ -61,7 +55,7 @@
           {{ $filters.formatCurrency(summary.total) }}
         </div>
       </div>
-      <BaseButton>Continue to Payment</BaseButton>
+      <BaseButton v-if="isButtonVisible" :disabled="isButtonDisabled">{{ buttonLabel }}</BaseButton>
     </div>
   </div>
 </template>
@@ -70,10 +64,23 @@
 import BaseButton from '@/core/components/BaseButton.vue'
 import { useCheckoutStore } from '@/stores'
 import { storeToRefs } from 'pinia'
-import { reactive, watch } from 'vue'
+import { computed, reactive, watch } from 'vue'
 
 const checkoutStore = useCheckoutStore()
-const { checkout, dropshipper } = storeToRefs(checkoutStore)
+const { checkout, activeStep, dropshipper } = storeToRefs(checkoutStore)
+
+const buttonLabel = computed(() => {
+  switch (activeStep.value) {
+    case 1:
+      return 'Continue to Payment'
+    case 2:
+      return `Pay with ${checkout.value.payment.label}`
+    case 3:
+      return 'Finish'
+    default:
+      return ''
+  }
+})
 
 const summary = reactive({
   itemsPurchased: 10,
@@ -93,6 +100,15 @@ const shipment = reactive({
 const payment = reactive({
   label: checkout.value.payment.label
 })
+
+const isShipmentHidden = computed(() => shipment.label === '')
+const isPaymentHidden = computed(() => payment.label === '')
+const isButtonVisible = computed(() => activeStep.value !== 3)
+const isButtonDisabled = computed(
+  () =>
+    activeStep.value === 2 &&
+    (checkout.value.shipment.label === '' || checkout.value.payment.label === '')
+)
 
 watch(
   () => checkoutStore.checkout.shipment.price,
@@ -157,7 +173,7 @@ watch(
       &__content
         display flex
         flex-direction column
-        gap 22px
+        gap 20px
 
         &__total
           margin-top 10px
@@ -182,6 +198,7 @@ watch(
             color #000000
 
           &__value
+            margin-top 4px
             font-size 16px
             color #1BD97B
             font-weight 600

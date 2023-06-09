@@ -18,7 +18,6 @@ import { storeToRefs } from 'pinia'
 
 const checkoutStore = useCheckoutStore()
 const { checkout } = storeToRefs(checkoutStore)
-checkoutStore.reset()
 
 const characters = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'
 let orderId = ''

@@ -17,17 +17,26 @@ const router = createRouter({
         {
           path: 'delivery',
           name: 'Delivery',
-          component: () => import('@/modules/transaction/views/CheckoutDeliveryView.vue')
+          component: () => import('@/modules/transaction/views/CheckoutDeliveryView.vue'),
+          meta: {
+            step: 1
+          }
         },
         {
           path: 'payment',
           name: 'Payment',
-          component: () => import('@/modules/transaction/views/CheckoutPaymentView.vue')
+          component: () => import('@/modules/transaction/views/CheckoutPaymentView.vue'),
+          meta: {
+            step: 2
+          }
         },
         {
           path: 'finish',
           name: 'Finish',
-          component: () => import('@/modules/transaction/views/CheckoutFinishView.vue')
+          component: () => import('@/modules/transaction/views/CheckoutFinishView.vue'),
+          meta: {
+            step: 3
+          }
         }
       ]
     }
