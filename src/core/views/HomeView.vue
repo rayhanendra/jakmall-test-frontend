@@ -52,6 +52,7 @@ const handleAddToCart = () => {
     border-radius 4px;
     padding 20px
     text-align center
+    transition all 0.2s ease-in-out
 
     &:hover
       box-shadow 2px 10px 20px rgba(255, 138, 0, 0.2);
