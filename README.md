@@ -1,68 +1,74 @@
 # jakmall-test-rayhanendra
 
-This template should help get you started developing with Vue 3 in Vite.
+## Project Description
 
-## Recommended IDE Setup
+Created by Rayhanendra
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Project Approach and Ideas
 
-## Type Support for `.vue` Imports in TS
+- I use Vite as the build tool because it's fast and easy to setup
+- I use Vue 3 because it's the latest version of Vue and it's faster than Vue 2
+- I use Stylus because it's easy to use and it's similar to SCSS
+- I use Pinia because it's the latest state management for Vue 3
+- I use Cypress for E2E testing because it's easy to use and it's the most popular E2E testing tool for Vue
+- I use Commitlint and Commitizen to standardize commit messages
+- I use ESLint and Prettier for linting and formatting
+- I use Husky to run linting and formatting before commiting
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## Project Process
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+- First, setup the project with Vue 3, Stylus, Pinia, Vue Router, ESLint, Prettier, Husky, Commitlint, and Commitizen
+- Then, setup the router, store, style, and base layout
+- Then, add the checkout page and the stepper component
+- Then, add the checkout form component with vee-validate for form state and add checkout summary
+- Then, break down the checkout form component into smaller components
+- Then, add payment page and implement router children for the checkout steps
+- Then, persist the form state with store
+- Then, fix some ui bugs
+- Then, add filters
+- Then, make the summary reactive
+- Then, add finish page
+- Then, improve ui, form flow, and adjustments
+- Then, implement responsive ui
+- Then, do some refactoring and fixes
+- Finally, add E2E tests with Cypress
 
 ## Project Setup
+
+### Install dependencies:
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Install Husky Git Hooks:
+
+```sh
+npm prepare
+```
+
+### Run Development Server:
 
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Build for Production:
 
 ```sh
 npm run build
-```
-
-### Run Headed Component Tests with [Cypress Component Testing](https://on.cypress.io/component)
-
-```sh
-npm run test:unit:dev # or `npm run test:unit` for headless testing
 ```
 
 ### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
 
 ```sh
-npm run test:e2e:dev
-```
-
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
 npm run test:e2e
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+or
 
 ```sh
-npm run lint
+npx cypress open
 ```
+
+and then run the checkout test
