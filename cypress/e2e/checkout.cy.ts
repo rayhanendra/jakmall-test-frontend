@@ -45,16 +45,28 @@ describe('Checkout', () => {
   const shipemnts = ['GO-SEND', 'JNE', 'Personal Courier']
   const payments = ['e-Wallet', 'Bank Transfer', 'Virtual Account']
 
+  const customerData = {
+    name: 'John Doe',
+    phoneNumber: '1234567890',
+    address:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies aliquam, nunc nisl aliquet nunc, eget aliquam nisl nunc eget nisl.'
+  }
+
+  const dropshipperData = {
+    name: 'Jane Doe',
+    phoneNumber: '0987654321'
+  }
+
   const customer = () => {
-    cy.get('input[name="name"]').type('John Doe')
-    cy.get('input[name="phoneNumber"]').type('1234567890')
-    cy.get('textarea[name="address"]').type('123 Main St')
+    cy.get('input[name="name"]').type(customerData.name)
+    cy.get('input[name="phoneNumber"]').type(customerData.phoneNumber)
+    cy.get('textarea[name="address"]').type(customerData.address)
   }
 
   const dropshipper = () => {
     cy.get('#dropshipper').click()
-    cy.get('input[name="dropshipperName"]').parent().type('Jane Doe')
-    cy.get('input[name="dropshipperPhoneNumber"]').parent().type('0987654321')
+    cy.get('input[name="dropshipperName"]').parent().type(dropshipperData.name)
+    cy.get('input[name="dropshipperPhoneNumber"]').parent().type(dropshipperData.phoneNumber)
   }
 
   const payment = () => {
