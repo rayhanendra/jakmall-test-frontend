@@ -183,9 +183,6 @@ const handleKeyPress = (event: KeyboardEvent) => {
     color #000000
     transition border 0.2s ease-in-out
 
-    &:focus
-      border 1px solid #FF8A00
-
     &--valid
       border 1px solid #1BD97B
 

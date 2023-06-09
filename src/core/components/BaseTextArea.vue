@@ -118,8 +118,7 @@ const handleBlur = () => {
     font-weight 500
     color #999999
     width 80%
-    background #FFFFFF
-
+    background transparent
     transform translateY(0%)
     transition transform 0.2s ease-in-out, font-size 0.2s ease-in-out
 
@@ -151,7 +150,6 @@ const handleBlur = () => {
 
     &:focus
       outline none
-      border 1px solid #FF8A00
       border-radius none
 
     &--valid
