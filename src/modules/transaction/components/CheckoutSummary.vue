@@ -175,6 +175,10 @@ watch(
         flex-direction column
         gap 20px
 
+        @media (max-width: 768px)
+          gap 10px
+          margin-bottom 40px
+
         &__total
           margin-top 10px
           font-size 14px

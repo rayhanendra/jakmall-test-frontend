@@ -1,7 +1,7 @@
 <template>
   <div class="payment">
     <div class="payment__item">
-      <BaseFormTitle title="Shipment" />
+      <CheckoutTitle title="Shipment" />
       <CheckoutPaymentChoices
         :select="shipmentId"
         :choiceOptions="shipmentOptions"
@@ -9,7 +9,7 @@
       />
     </div>
     <div class="payment__item">
-      <BaseFormTitle title="Payment" />
+      <CheckoutTitle title="Payment" />
       <CheckoutPaymentChoices
         :select="payment"
         :choiceOptions="paymentOptions"
@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseFormTitle from '@/core/components/BaseFormTitle.vue'
+import CheckoutTitle from '@/modules/transaction/components/CheckoutTitle.vue'
 import { ref, watch } from 'vue'
 import CheckoutPaymentChoices from '@/modules/transaction/components/CheckoutPaymentChoices.vue'
 import { useCheckoutStore } from '@/stores'
@@ -121,4 +121,7 @@ const handlePayment = (value: string) => {
     margin-bottom 4rem
     &:last-child
       margin-bottom 0
+
+    @media screen and (max-width: 768px)
+      gap 0
 </style>

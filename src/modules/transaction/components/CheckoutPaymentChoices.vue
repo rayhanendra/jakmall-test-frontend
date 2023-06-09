@@ -58,8 +58,13 @@ const handleSelect = (value: string) => {
   align-items center
   gap 20px
 
+  @media screen and (max-width: 768px)
+    gap 10px
+    flex-direction column
+
   &__item
-    width 180px
+    width 100%
+    max-width 180px
     height 44px
     display flex
     flex-direction column
@@ -68,6 +73,12 @@ const handleSelect = (value: string) => {
     padding 12px 16px
     border 1px solid #CCCCCC
     cursor pointer
+    
+    @media screen and (max-width: 768px)
+      box-sizing border-box
+      max-width 100%
+      height 60px
+      padding 16px 20px
 
     &--active
       border 1px solid #1BD97B

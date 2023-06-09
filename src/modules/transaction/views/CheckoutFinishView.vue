@@ -1,7 +1,7 @@
 <template>
   <div class="finish">
     <div>
-      <BaseFormTitle title="Thank You" />
+      <CheckoutTitle title="Thank You" />
       <div class="finish__order-id">Order ID : {{ orderId }}</div>
       <div class="finish__shipment">
         Your order will be delivered today with {{ checkout.shipment.label }}
@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseFormTitle from '@/core/components/BaseFormTitle.vue'
+import CheckoutTitle from '@/modules/transaction/components/CheckoutTitle.vue'
 import { useCheckoutStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 

@@ -38,6 +38,11 @@ defineProps({
   width 500px
   height 70px
 
+  @media screen and (max-width: 768px)
+    width 100%
+    height 60px
+    top -50px
+
   &__dot
     display flex
     align-items center
@@ -46,6 +51,9 @@ defineProps({
     font-size 16px
     font-weight bold
     color #FF8A00
+
+    @media screen and (max-width: 768px)
+      font-size 14px
 
     &__point
       width 20px

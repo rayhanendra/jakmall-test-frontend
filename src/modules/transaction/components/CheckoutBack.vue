@@ -42,4 +42,9 @@ const handleClick = () => {
   font-size 14px
   font-weight 500
   cursor pointer
+
+  @media screen and (max-width: 768px)
+    margin-left 16px
+    gap 5px
+    font-size 12px
 </style>

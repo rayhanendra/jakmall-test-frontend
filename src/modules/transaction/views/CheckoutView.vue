@@ -125,6 +125,8 @@ const handleBack = () => {
   router.push({
     name: steps[activeStep.value - 1]
   })
+
+  scrollToTop()
 }
 
 const handleNext = () => {
@@ -133,11 +135,20 @@ const handleNext = () => {
   router.push({
     name: steps[activeStep.value - 1]
   })
+
+  scrollToTop()
 }
 
 const isStepNotThree = computed(() => {
   return router.currentRoute.value.meta.step !== 3
 })
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
 </script>
 
 <style scoped lang="stylus">
@@ -162,11 +173,19 @@ const isStepNotThree = computed(() => {
     display flex
     flex-basis 100%
 
+    @media screen and (max-width: 768px)
+      flex-direction column
+      height 100%
+
   &__form
     flex-basis 70%
     padding 40px
     flex-direction column
-    // height 100%
+
+    @media screen and (max-width: 768px)
+      flex-basis 100%
+      margin-top 20px
+      padding 16px
 
   &__summary
     flex-basis 30%
@@ -178,4 +197,13 @@ const isStepNotThree = computed(() => {
     border-color rgba(255, 138, 0, 0.2)
     display flex
     flex-direction column
+
+    @media screen and (max-width: 768px)
+      flex-basis 100%
+      margin-top 20px
+      padding 16px
+      height auto
+      border-left none
+      border-top 1px solid #FF8A00
+      border-color rgba(255, 138, 0, 0.2)
 </style>

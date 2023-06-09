@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="delivery__title">
-      <BaseFormTitle title="Delivery details" />
+      <CheckoutTitle title="Delivery details" />
       <div class="input">
         <input v-model="dropshipper" type="checkbox" id="dropshipper" />
         <label for="dropshipper">Send as Dropshipper</label>
@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseFormTitle from '@/core/components/BaseFormTitle.vue'
+import CheckoutTitle from '@/modules/transaction/components/CheckoutTitle.vue'
 import BaseTextField from '@/core/components/BaseTextField.vue'
 import BaseTextArea from '@/core/components/BaseTextArea.vue'
 import { watch } from 'vue'
@@ -63,6 +63,12 @@ watch(dropshipper, (value) => {
     justify-content space-between
     align-items center
     gap 20px
+
+    @media screen and (max-width: 768px)
+      flex-direction column
+      align-items flex-start
+      gap 10px
+      margin-bottom 40px
 
 .input
   display flex
