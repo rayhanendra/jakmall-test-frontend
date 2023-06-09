@@ -44,7 +44,12 @@
         </div>
       </div>
       <div class="summary__main__pricing__item">
-        <div class="summary__main__pricing__item__label"><b>GO-SEND</b> shipment</div>
+        <div class="summary__main__pricing__item__label">
+          <b>
+            {{ shipment.label }}
+          </b>
+          shipment
+        </div>
         <div class="summary__main__pricing__item__value">
           {{ $filters.formatCurrency(summary.shipment) }}
         </div>
@@ -84,8 +89,6 @@ const buttonLabel = computed(() => {
 
 const summary = reactive({
   itemsPurchased: 10,
-  shipping: false,
-  payment: false,
   cost: 500000,
   dropshipping: 0,
   shipment: checkout.value.shipment.price,

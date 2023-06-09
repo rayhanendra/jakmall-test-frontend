@@ -3,7 +3,9 @@
     <div v-for="(step, index) in steps" :key="index" class="stepper__dot">
       <div
         class="stepper__dot__point"
-        :class="{ 'stepper__dot__point--active': activeStep === index + 1 }"
+        :class="{
+          'stepper__dot__point--active': completedSteps.includes(step) || activeStep === index + 1
+        }"
       >
         {{ index + 1 }}
       </div>
@@ -13,7 +15,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   steps: {
     type: Array
   },
@@ -21,6 +25,12 @@ defineProps({
     type: Number,
     required: true
   }
+})
+
+const completedSteps = computed(() => {
+  if (!props.steps) return []
+
+  return props.steps.slice(0, props.activeStep - 1)
 })
 </script>
 
